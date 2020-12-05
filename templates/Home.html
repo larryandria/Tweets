@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang='en' class=''>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Tweets</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tweets searching ...</h1>
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <input type="text" class="form-control" id="inputText">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type=submit value='Search' name='submit_btn' class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+        {% if tweets|length > 0 %}
+            {% block content %}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tweets</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for tweet in tweets %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{tweet}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endblock content %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
