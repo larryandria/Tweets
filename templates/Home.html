@@ -10,10 +10,10 @@
 <body>
     <div class="container">
         <h1>Tweets searching ...</h1>
-        <form>
+        <form method="POST" action="">
             <div class="form-row">
                 <div class="form-group col-md-10">
-                    <input type="text" class="form-control" id="inputText">
+                    <input type="text" class="form-control" name="text">
                 </div>
                 <div class="form-group col-md-2">
                     <input type=submit value='Search' name='submit_btn' class="btn btn-primary">
@@ -22,12 +22,13 @@
         </form>
         {% if tweets|length > 0 %}
             {% block content %}
+            <h2>Results for : {{ text }}</h2>
             <table class="table table-hover">
                 <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Tweets</th>
-                </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tweets</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {% for tweet in tweets %}
