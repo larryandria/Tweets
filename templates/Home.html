@@ -13,7 +13,7 @@
         <form method="POST" action="">
             <div class="form-row">
                 <div class="form-group col-md-10">
-                    <input type="text" class="form-control" name="text">
+                    <input type="text" class="form-control" name="query">
                 </div>
                 <div class="form-group col-md-2">
                     <input type=submit value='Search' name='submit_btn' class="btn btn-primary">
@@ -21,25 +21,29 @@
             </div>
         </form>
         {% if tweets|length > 0 %}
-            {% block content %}
-            <h2>Results for : {{ text }}</h2>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Tweets</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tweet in tweets %}
-                    <tr>
-                        <th scope="row">{{loop.index}}</th>
-                        <td>{{tweet}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% endblock content %}
+        {% block content %}
+        <h2>Results for : {{ query }}</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Tweet</th>
+                    <th scope="col">Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tweet in tweets %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{tweet.date}}</td>
+                    <td>{{tweet.msg}}</td>
+                    <td>{{tweet.author}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock content %}
         {% endif %}
     </div>
 </body>
