@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang='en' class=''>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Tweets</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tweets searching ...</h1>
+        <form method="POST" action="">
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <input type="text" class="form-control" name="query">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type=submit value='Search' name='submit_btn' class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+        {% if tweets|length > 0 %}
+        {% block content %}
+        <h2>Results for : {{ query }}</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Tweet</th>
+                    <th scope="col">Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tweet in tweets %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{tweet.date}}</td>
+                    <td>{{tweet.msg}}</td>
+                    <td>{{tweet.author}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock content %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
