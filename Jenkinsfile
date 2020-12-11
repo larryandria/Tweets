@@ -12,7 +12,9 @@ pipeline{
       }
     }
     stage('Docker compose down'){
-        sh 'docker-compose down'
+        steps{
+            sh 'docker-compose down'
+        }
     }
   }
 }
