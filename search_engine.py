@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-df = pd.read_csv("C:/Users/geekt/Downloads/tweets.csv")#path of the file 
+df = pd.read_csv("./Data/tweets.csv")#path of the file 
 df =df.drop(["link","Unnamed: 0","id"],axis=1)#we remove the column with no interest
 df.apply(lambda x: x.astype(str).str.lower())#just lower all the carachter that's better for the model
 df.head(10)#display the 10 first row this line can be delete that's was just to check...
@@ -21,7 +21,6 @@ print(X.shape) # (dimension of the dataset) you can delete this one too
 
 query = "I'm the best in the world"#query correspond to the query 
 
-%%time
 query_vec = vectorizer.transform([query]) #(n_docs,x),(n_docs,n_Feats)
 results = cosine_similarity(X,query_vec).reshape((-1,)) #Cosine Sim with each doc
 
