@@ -4,13 +4,26 @@ import os
 import csv
 import numpy as np
 import pandas as pd
-
+import random
+import time
 from tweet import Tweet   
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from prometheus_client import start_http_server
+from prometheus_client import Counter
+from prometheus_client import Gauge
+from prometheus_client import Summary
+
+REQUESTS = Counter('flask_redis_app_access_total','How many times the application has been accessed')
+EXECPTIONS = Counter('flask_redis_app_exeptions_total','How many times the application issued an execption')
+
+INPROGRESS = Gauge('flask_redis_app_inprogress','How many request the app are currently in progress')
+LAST= Gauge('flask_redis_app_access_gauge','When was the application last accessed')
+
+LATENCY = Summary('flask_redis_app_lattency_seconds','time needed for a request')
 app = Flask(__name__)
 
 df = pd.read_csv("./Data/tweets.csv")#path of the file 
@@ -24,6 +37,15 @@ X = vectorizer.fit_transform(df['text']) # Store tf-idf representations of all d
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    REQUEST.inc()
+    with EXECPTIONS.count_exceptions:
+        if random.random() < 0.2:
+            raise Exception
+    LAST.set(time.time())
+    INPROGRESS.inc()
+    start = time.time()
+    time.sleep(2)
+
     if request.method == 'POST':
         query = request.form['query']
         query_vec = vectorizer.transform([query]) #(n_docs,x),(n_docs,n_Feats)
@@ -33,8 +55,11 @@ def index():
             tweets.append( Tweet(df.iloc[i,0], df.iloc[i,2],df.iloc[i,3]))
 
         return render_template('Home.html', query=query, tweets=tweets)
+    INPROGRESS.dec()
+    LATENCY.observe(time.time() - start)
     return render_template('Home.html')
-
+    
 
 if __name__ == '__main__':
+    start_http_server(8010)
     app.run(host='0.0.0.0')
