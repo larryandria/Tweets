@@ -37,29 +37,32 @@ X = vectorizer.fit_transform(df['text']) # Store tf-idf representations of all d
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    REQUEST.inc()
-    with EXECPTIONS.count_exceptions:
-        if random.random() < 0.2:
+    REQUESTS.inc()
+    with EXECPTIONS.count_exceptions():
+        LAST.set(time.time())
+        INPROGRESS.inc()
+        start = time.time()
+        if request.method == 'POST':
+            try:
+                query = request.form['query']
+                query_vec = vectorizer.transform([query]) #(n_docs,x),(n_docs,n_Feats)
+                results = cosine_similarity(X,query_vec).reshape((-1,)) #Cosine Sim with each doc
+                tweets = []
+                for i in results.argsort()[-20:][::-1]:
+                    tweets.append( Tweet(df.iloc[i,0], df.iloc[i,2],df.iloc[i,3]))
+                INPROGRESS.dec()
+                LATENCY.observe(time.time() - start)
+                return render_template('Home.html', query=query, tweets=tweets)
+            except :
+                raise Exception
+      
+        try:
+            INPROGRESS.dec()
+            LATENCY.observe(time.time() - start)
+            return render_template('Home.html')
+        except :
             raise Exception
-    LAST.set(time.time())
-    INPROGRESS.inc()
-    start = time.time()
-    time.sleep(2)
-
-    if request.method == 'POST':
-        query = request.form['query']
-        query_vec = vectorizer.transform([query]) #(n_docs,x),(n_docs,n_Feats)
-        results = cosine_similarity(X,query_vec).reshape((-1,)) #Cosine Sim with each doc
-        tweets = []
-        for i in results.argsort()[-20:][::-1]:
-            tweets.append( Tweet(df.iloc[i,0], df.iloc[i,2],df.iloc[i,3]))
-
-        return render_template('Home.html', query=query, tweets=tweets)
-    INPROGRESS.dec()
-    LATENCY.observe(time.time() - start)
-    return render_template('Home.html')
     
-
 if __name__ == '__main__':
     start_http_server(8010)
     app.run(host='0.0.0.0')
