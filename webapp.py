@@ -16,14 +16,18 @@ from prometheus_client import start_http_server
 from prometheus_client import Counter
 from prometheus_client import Gauge
 from prometheus_client import Summary
+from prometheus_client import Histogram
 
-REQUESTS = Counter('flask_redis_app_access_total','How many times the application has been accessed')
-EXECPTIONS = Counter('flask_redis_app_exeptions_total','How many times the application issued an execption')
 
-INPROGRESS = Gauge('flask_redis_app_inprogress','How many request the app are currently in progress')
-LAST= Gauge('flask_redis_app_access_gauge','When was the application last accessed')
+REQUESTS = Counter('tweets_app_access_total','How many times the application has been accessed')
+EXECPTIONS = Counter('tweets_app_exeptions_total','How many times the application issued an execption')
 
-LATENCY = Summary('flask_redis_app_lattency_seconds','time needed for a request')
+INPROGRESS = Gauge('tweets_app_inprogress','How many request the app are currently in progress')
+LAST= Gauge('tweets_app_access_gauge','When was the application last accessed')
+
+LATENCY = Summary('tweets_app_latency_seconds','time needed for a request')
+LATENCY_HIS = Histogram('tweets_app_latency_histogram_seconds', 'time needed for a request',
+                        buckets=[0.0001,0.001,0.01,0.1,1.0,1.5,2.0,3.0])
 app = Flask(__name__)
 
 df = pd.read_csv("./Data/tweets.csv")#path of the file 
@@ -51,14 +55,17 @@ def index():
                 for i in results.argsort()[-20:][::-1]:
                     tweets.append( Tweet(df.iloc[i,0], df.iloc[i,2],df.iloc[i,3]))
                 INPROGRESS.dec()
-                LATENCY.observe(time.time() - start)
+                lat = time.time()
+                LATENCY.observe(lat - start)
                 return render_template('Home.html', query=query, tweets=tweets)
             except :
                 raise Exception
       
         try:
             INPROGRESS.dec()
-            LATENCY.observe(time.time() - start)
+            lat = time.time()
+            LATENCY.observe(lat - start)
+            LATENCY_HIS.observe(lat - start)
             return render_template('Home.html')
         except :
             raise Exception

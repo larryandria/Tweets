@@ -2,47 +2,69 @@
 <html lang='en' class=''>
 
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Tweets</title>
 </head>
 
 <body>
     <div class="container">
-        <h1>Tweets ...</h1>
-        <form method="POST" action="">
-            <div class="form-row">
-                <div class="form-group col-md-10">
-                    <input type="text" class="form-control" name="query">
-                </div>
-                <div class="form-group col-md-2">
-                    <input type=submit value='Search' name='submit_btn' class="btn btn-primary">
+        <div class="row py-5">
+            <div class="col-lg-9 mx-auto text-white text-center">
+                <h1 class="display-4">Search similar tweets</h1>
+                <p class="lead mb-0">Project data engineering</p>
+                </p>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="bg-white p-5 rounded shadow">
+                    <form method="POST" action="">
+                        <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                            <div class="input-group">
+                                <input type="search" placeholder="What're you searching for?"
+                                    aria-describedby="button-addon1" class="form-control border-0 bg-light"
+                                    name="query">
+                                <div class="input-group-append">
+                                    <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i
+                                            class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
         {% if tweets|length > 0 %}
         {% block content %}
-        <h2 class="Results">Results for : {{ query }}</h2>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Tweet</th>
-                    <th scope="col">Author</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tweet in tweets %}
-                <tr>
-                    <th class="index-{{loop.index}}">{{loop.index}}</th>
-                    <td class="date-{{loop.index}}">{{tweet.date}}</td>
-                    <td class="msg-{{loop.index}}">{{tweet.msg}}</td>
-                    <td class="author-{{loop.index}}">{{tweet.author}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h5 class="font-weight-light mb-4 font-italic text-white" class="Results">Results for : {{ query }}</h5>
+                <div class="bg-white p-5 rounded shadow">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Tweet</th>
+                                <th scope="col">Author</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tweet in tweets %}
+                            <tr>
+                                <th class="index-{{loop.index}}">{{loop.index}}</th>
+                                <td class="date-{{loop.index}}">{{tweet.date}}</td>
+                                <td class="msg-{{loop.index}}">{{tweet.msg}}</td>
+                                <td class="author-{{loop.index}}">{{tweet.author}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% endblock content %}
         {% endif %}
     </div>

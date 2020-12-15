@@ -36,7 +36,7 @@ class FlaskTests(unittest.TestCase):
         pageResponse = BeautifulSoup(response.data, 'html.parser')
         test = pageResponse.find(class_="Results")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(str(test), '<h2 class="Results">Results for : {}</h2>'.format(query))
+        self.assertEqual(str(test), '<h5 class="Results">Results for : {}</h5>'.format(query))
 
     def test_Results(self):
         query = "I'm the best in the world"
