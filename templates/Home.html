@@ -22,7 +22,7 @@
         </form>
         {% if tweets|length > 0 %}
         {% block content %}
-        <h2>Results for : {{ query }}</h2>
+        <h2 class="Results">Results for : {{ query }}</h2>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -35,10 +35,10 @@
             <tbody>
                 {% for tweet in tweets %}
                 <tr>
-                    <th scope="row">{{loop.index}}</th>
-                    <td>{{tweet.date}}</td>
-                    <td>{{tweet.msg}}</td>
-                    <td>{{tweet.author}}</td>
+                    <th class="index-{{loop.index}}">{{loop.index}}</th>
+                    <td class="date-{{loop.index}}">{{tweet.date}}</td>
+                    <td class="msg-{{loop.index}}">{{tweet.msg}}</td>
+                    <td class="author-{{loop.index}}">{{tweet.author}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
