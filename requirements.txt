@@ -3,3 +3,4 @@ redis
 sklearn
 numpy
 pandas
+prometheus-client
